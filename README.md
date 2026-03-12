@@ -2,7 +2,7 @@
 API REST para la gestión de restaurantes, menús, platos, mesas y reservaciones.
 El proyecto utiliza contenedores Docker, autenticación con Keycloak y una base de datos PostgreSQL.
 
-## Tecnologías utilizadas
+## ⚙️ Tecnologías utilizadas
 - **Node.js**
 - **Express.js**
 - **PostgreSQL**
@@ -10,7 +10,7 @@ El proyecto utiliza contenedores Docker, autenticación con Keycloak y una base 
 - **Docker**
 - **Docker Compose**
 
-## Instalación
+## 🛠️ Instalación
 Clonar repositorio:
 ```bash
 git clone https://github.com/
@@ -29,4 +29,5 @@ Ejecutar contenedores:
 ```
 docker compose up --build
 ```
+
 
