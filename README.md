@@ -16,7 +16,7 @@ Clonar repositorio:
 git clone https://github.com/
 ```
 
-Crear archivo ```.env```:
+Crear archivo ```.env``` en la raíz del proyecto:
 ```
 PORT=5000
 BD_USER=postgres
@@ -29,3 +29,4 @@ Ejecutar contenedores:
 ```
 docker compose up --build
 ```
+
