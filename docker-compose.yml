@@ -1,0 +1,33 @@
+services:
+  db:
+    image: postgres:18.3
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: restaurantes_db
+    volumes:
+    - ./db/init_db.sql:/docker-entrypoint-initdb.d/init_db.sql
+    ports:
+      - "4001:5432"
+   
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.5.5
+    command: start-dev
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+    ports:
+      - "8081:8080"
+  
+  api:
+    build: .
+    ports:
+      - "5001:5000"
+    env_file:
+      - .env
+    depends_on:
+      - keycloak
+      - db
+
+ 
+    
