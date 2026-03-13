@@ -24,10 +24,18 @@ BD_PASSWORD=postgres
 BD_DATABASE=restaurantes_db
 BD_HOST=db
 BD_PORT=5432
+
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=postgres
+POSTGRES_DB=restaurantes_db
+
+KC_BOOTSTRAP_ADMIN_USERNAME=admin
+KC_BOOTSTRAP_ADMIN_PASSWORD=admin
 ```
 Ejecutar contenedores:
 ```
 docker compose up --build
 ```
+
 
 
