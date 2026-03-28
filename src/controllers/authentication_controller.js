@@ -1,11 +1,10 @@
 const axios = require("axios");
-const pool = require("../config/db.js"); // 1. Importa tu conexión a la DB
+const pool = require("../config/db.js");
 
 exports.register = async (req, res) => {
     try {
-        const { username, email, password, first_name, last_name } = req.body;
+        const { username, email, password, first_name, last_name, isAdmin } = req.body; 
 
-        // --- PASO A: Obtener Token de Admin ---
         const adminToken = await axios.post(
             "http://keycloak:8080/realms/master/protocol/openid-connect/token",
             new URLSearchParams({
@@ -19,7 +18,7 @@ exports.register = async (req, res) => {
 
         const token = adminToken.data.access_token;
 
-        // --- PASO B: Crear Usuario en Keycloak ---
+        // Crear usuario
         const kcResponse = await axios.post(
             "http://keycloak:8080/admin/realms/restaurant-realm/users",
             {
@@ -39,21 +38,43 @@ exports.register = async (req, res) => {
             }
         );
 
-        // --- PASO C: Extraer el ID de Keycloak ---
-        // Keycloak devuelve la URL del nuevo usuario en el header 'Location'
-        // Ejemplo: http://.../users/5a8e... <- Ese final es el ID que necesitamos
         const locationHeader = kcResponse.headers.location;
         const kcUserId = locationHeader.split('/').pop();
 
-        // --- PASO D: Insertar en tu tabla PostgreSQL ---
+        if (isAdmin) {
+            // Obtener el ID del rol "admin" en Keycloak
+            const rolesResponse = await axios.get(
+                `http://keycloak:8080/admin/realms/restaurant-realm/roles`,
+                {
+                    headers: { Authorization: `Bearer ${token}` }
+                }
+            );
+            
+            const adminRole = rolesResponse.data.find(role => role.name === "admin");
+            
+            if (adminRole) {
+                await axios.post(
+                    `http://keycloak:8080/admin/realms/restaurant-realm/users/${kcUserId}/role-mappings/realm`,
+                    [adminRole],
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            "Content-Type": "application/json"
+                        }
+                    }
+                );
+            }
+        }
+
         await pool.query(
             "INSERT INTO usuarios (id, email, nombre) VALUES ($1, $2, $3)",
             [kcUserId, email, `${first_name} ${last_name}`]
         );
 
-        res.json({
-            message: "Usuario registrado correctamente en Keycloak y base de datos local",
-            id: kcUserId
+        res.status(201).json({
+            message: "Usuario registrado correctamente",
+            id: kcUserId,
+            roles: isAdmin ? ["admin"] : []
         });
 
     } catch (error) {
@@ -66,8 +87,7 @@ exports.register = async (req, res) => {
 };
 
 exports.login = async (req, res) => {
-    // Tu función de login se mantiene igual. 
-    // Al loguearse, el usuario recibirá el token que usará para los demás endpoints.
+
     try {
         const { username, password } = req.body;
         const response = await axios.post(

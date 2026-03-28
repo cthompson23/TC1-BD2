@@ -15,7 +15,7 @@ exports.get_reservation_by_id = async (req, res, next) => {
     const { id } = req.params;
     const reservation = await pool.query('SELECT * FROM reservaciones WHERE id= $1', [id]);
     if (reservation.rows.length === 0) {
-      return res.status(404).json({ message: 'Reservation not found' });
+      return res.status(404).json({ message: 'Reservación no encontrada' });
     }
     res.json(reservation.rows[0]);
   } catch (error) {
@@ -148,7 +148,7 @@ exports.delete_reservation = async (req, res, next) => {
         
         await client.query('COMMIT');
         
-        res.json({ message: 'Reservación eliminada físicamente' });
+        res.json({ message: 'Reservación eliminada correctamente' });
     } catch (error) {
         await client.query('ROLLBACK');
         next(error);

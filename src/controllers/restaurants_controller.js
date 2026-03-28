@@ -1,4 +1,3 @@
-//logica del endpoint
 const pool = require("../config/db.js");
 
 exports.create_restaurant = async (req, res, next) => {
@@ -9,7 +8,7 @@ exports.create_restaurant = async (req, res, next) => {
       [nombre_rest, ubicacion, correo_rest, telefono_rest]
     );
 
-    res.json(new_restaurant.rows[0]);
+    res.status(201).json(new_restaurant.rows[0]);
 
   } catch (error) {
     next(error);

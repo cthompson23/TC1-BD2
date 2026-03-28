@@ -3,21 +3,48 @@ const pool = require("../config/db.js");
 // Obtener todos los pedidos
 exports.get_all_orders = async (req, res, next) => {
   try {
-        const orders = await pool.query('SELECT * FROM pedidos');
-        res.json(orders.rows);
+    const user = req.kauth?.grant?.access_token?.content;
+    const roles = user?.realm_access?.roles || [];
+    const isAdmin = roles.includes("admin");
+    
+    let query = 'SELECT * FROM pedidos';
+    let params = [];
+    
+    if (!isAdmin) {
+      query += ' WHERE usuario_id = $1';
+      params.push(user.sub);
+    }
+    
+    const orders = await pool.query(query, params);
+    res.json(orders.rows);
   } catch (error) {
     next(error);
   }
 };
 
+
 // Obtener pedido por ID
 exports.get_order_by_id = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const order = await pool.query('SELECT * FROM pedidos WHERE id= $1', [id]);
-    if (order.rows.length === 0) {
-      return res.status(404).json({ message: 'Order not found' });
+    const user = req.kauth?.grant?.access_token?.content;
+    const roles = user?.realm_access?.roles || [];
+    const isAdmin = roles.includes("admin");
+    
+    let query = 'SELECT * FROM pedidos WHERE id = $1';
+    let params = [id];
+    
+    if (!isAdmin) {
+      query += ' AND usuario_id = $2';
+      params.push(user.sub);
     }
+    
+    const order = await pool.query(query, params);
+    
+    if (order.rows.length === 0) {
+      return res.status(404).json({ message: 'Pedido no encontrado' });
+    }
+    
     res.json(order.rows[0]);
   } catch (error) {
     next(error);
@@ -112,7 +139,6 @@ exports.delete_order = async (req, res, next) => {
             return res.status(404).json({ message: 'Pedido no encontrado' });
         }
         
-        // Eliminar pedido (CASCADE eliminará idem_pedido)
         await pool.query('DELETE FROM pedidos WHERE id = $1', [id]);
         
         res.json({ message: 'Pedido eliminado exitosamente' });
