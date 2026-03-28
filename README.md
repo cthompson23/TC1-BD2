@@ -36,6 +36,29 @@ Ejecutar contenedores:
 ```
 docker compose up --build
 ```
+## 📚 Documentación de la API (Swagger)
+### Acceso a la documentación
+Una vez que el servidor esté corriendo, puedes acceder a la interfaz en:
 
+```bash
+http://localhost:5001/api-docs
+```
+
+### Cómo probar endpoints protegidos (Admin)
+Para los endpoints que requieren el rol `admin`se debe sigue:
+
+1. **Obtener Token:** Realiza una petición de autenticación a Keycloak para obtener tu `access_token`.
+2. **Autorizar:** Haz clic en el botón **"Authorize"** en la parte superior de Swagger.
+3. **Insertar Token:** Pega tu token en el campo de valor.
+4. **Ejecutar:** Ahora puedes usar el botón **"Try it out"** en cualquier ruta protegida.
+
+### Endpoints Principales
+| Método | Ruta | Descripción | Acceso |
+|:-------|:-----|:------------|:-------|
+| GET | `/api/menus` | Lista todos los menús | Público |
+| GET | `/api/restaurants/{id}/menus` | Menús de un restaurante | Público |
+| POST | `/api/restaurants` | Crea un nuevo restaurante | Admin |
+| PUT | `/api/menus/{id}` | Actualiza un menú | Admin |
+| DELETE | `/api/menus/{id}` | Elimina un menú | Admin |
 
 
