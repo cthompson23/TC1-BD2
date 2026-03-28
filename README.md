@@ -16,7 +16,7 @@ Clonar repositorio:
 git clone https://github.com/
 ```
 
-Crear archivo ```.env``` en la raíz del proyecto:
+Crear archivo ```.env``` en la raíz del proyecto, por ejemplo:
 ```
 PORT=5000
 BD_USER=postgres
