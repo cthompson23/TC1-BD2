@@ -76,6 +76,8 @@ router.get("/orders/:id", keycloak.protect(), get_order_by_id);
  *               - tipo_pedido
  *               - fecha_orden
  *             properties:
+ *               reservacion_id:
+ *                 type: integer
  *               tipo_pedido:
  *                 type: string
  *                 example: "express"
@@ -86,10 +88,8 @@ router.get("/orders/:id", keycloak.protect(), get_order_by_id);
  *                   properties:
  *                     plato_id:
  *                       type: integer
- *                       example: 1
  *                     cantidad:
  *                       type: integer
- *                       example: 2
  *               fecha_orden:
  *                 type: string
  *                 example: "2026-03-28"
