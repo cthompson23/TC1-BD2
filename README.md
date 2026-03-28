@@ -55,10 +55,8 @@ Para los endpoints que requieren el rol `admin`se debe sigue:
 ### Endpoints Principales
 | Método | Ruta | Descripción | Acceso |
 |:-------|:-----|:------------|:-------|
-| GET | `/api/menus` | Lista todos los menús | Público |
-| GET | `/api/restaurants/{id}/menus` | Menús de un restaurante | Público |
 | POST | `/api/restaurants` | Crea un nuevo restaurante | Admin |
-| PUT | `/api/menus/{id}` | Actualiza un menú | Admin |
-| DELETE | `/api/menus/{id}` | Elimina un menú | Admin |
+| POST | `/api/auth/login` | Inicio de sesión y obtención de JWT | Público |
+| GET | `/api/user/me` | Obtener detalles del usuario autenticado | Público |
 
 
