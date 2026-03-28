@@ -16,7 +16,7 @@ Clonar repositorio:
 git clone https://github.com/
 ```
 
-Crear archivo ```.env``` en la raíz del proyecto:
+Crear archivo ```.env``` en la raíz del proyecto, por ejemplo:
 ```
 PORT=5000
 BD_USER=postgres
@@ -36,6 +36,27 @@ Ejecutar contenedores:
 ```
 docker compose up --build
 ```
+## 📚 Documentación de la API (Swagger)
+### Acceso a la documentación
+Una vez que el servidor esté corriendo, puedes acceder a la interfaz en:
 
+```bash
+http://localhost:5001/api-docs
+```
+
+### Cómo probar endpoints protegidos (Admin)
+Para los endpoints que requieren el rol `admin`se debe sigue:
+
+1. **Obtener Token:** Realiza una petición de autenticación a Keycloak para obtener tu `access_token`.
+2. **Autorizar:** Haz clic en el botón **"Authorize"** en la parte superior de Swagger.
+3. **Insertar Token:** Pega tu token en el campo de valor.
+4. **Ejecutar:** Ahora puedes usar el botón **"Try it out"** en cualquier ruta protegida.
+
+### Endpoints Principales
+| Método | Ruta | Descripción | Acceso |
+|:-------|:-----|:------------|:-------|
+| POST | `/api/restaurants` | Crea un nuevo restaurante | Admin |
+| POST | `/api/auth/login` | Inicio de sesión y obtención de JWT | Público |
+| GET | `/api/user/me` | Obtener detalles del usuario autenticado | Público |
 
 
