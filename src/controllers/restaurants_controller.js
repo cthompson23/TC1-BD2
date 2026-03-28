@@ -30,7 +30,7 @@ exports.get_restaurant_by_id = async (req, res, next) => {
     const { id } = req.params;
     const restaurant = await pool.query('SELECT * FROM restaurantes WHERE id= $1', [id]);
     if (restaurant.rows.length === 0) {
-      return res.status(404).json({ message: 'Restaurant not found' });
+      return res.status(404).json({ message: 'Restaurante no encontrado' });
     }
     res.json(restaurant.rows[0]);
   } catch (error) {
@@ -55,8 +55,15 @@ exports.update_restaurant = async (req, res, next) => {
 exports.delete_restaurant = async (req, res, next) => {
   try {
     const { id } = req.params;
-    await pool.query('DELETE FROM restaurantes WHERE id = $1', [id]);
-    res.json({ message: 'Restaurant deleted successfully' });
+    const result = await pool.query('DELETE FROM restaurantes WHERE id = $1 RETURNING id', [id]);
+    
+    if (result.rowCount === 0) {
+      return res.status(404).json({ message: 'Restaurante no encontrado' });
+    }
+    
+    res.json({ 
+      message: 'Restaurante eliminado exitosamente' 
+    });
   } catch (error) {
     next(error);
   }

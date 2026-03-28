@@ -1,62 +1,62 @@
 
-create table restaurantes (
-	id SERIAL primary key,
-	nombre_rest varchar(50) not null, 
-	ubicacion varchar(100) not null,
-	correo_rest varchar(100) unique,
-	telefono_rest varchar(15)
+CREATE TABLE restaurantes (
+	id SERIAL PRIMARY KEY,
+	nombre_rest VARCHAR(50) NOT NULL, 
+	ubicacion VARCHAR(100) NOT NULL,
+	correo_rest VARCHAR(100) UNIQUE,
+	telefono_rest VARCHAR(15)
 );
 
-create table menus (
-	id SERIAL primary key,
-	nombre_menu varchar(50) not null,
-	rest_id int references Restaurantes(id)
+CREATE TABLE menus (
+	id SERIAL PRIMARY KEY,
+	nombre_menu VARCHAR(50) NOT NULL,
+	rest_id INTEGER REFERENCES restaurantes(id) ON DELETE CASCADE
 );
 
-create table usuarios (
-	id SERIAL primary key,
-	usuario varchar(50),
-	nombre varchar(50),
-	apellido varchar(50),
-	email varchar(100),
-	rol varchar(15)
-);
-create table platos (
-	id SERIAL primary key,
-	nombre_plato varchar(50) not null,
-	precio numeric(10,2) not null,
-	menu_id int references menus(id)
+CREATE TABLE usuarios (
+	id VARCHAR(255) PRIMARY KEY,
+	usuario VARCHAR(50),
+	nombre VARCHAR(50),
+	apellido VARCHAR(50),
+	email VARCHAR(100)
 );
 
-create table mesas (
-	id SERIAL primary key,
-	disponible boolean not null default true,
-	rest_id int references restaurantes(id),
-	numero_mesa int,
-	capacidad int  check (capacidad > 0)
+CREATE TABLE platos (
+	id SERIAL PRIMARY KEY,
+	nombre_plato VARCHAR(50) NOT NULL,
+	precio NUMERIC(10,2) NOT NULL,
+	menu_id INTEGER REFERENCES menus(id) ON DELETE CASCADE
 );
 
-create table reservaciones(
-	id SERIAL primary key,
-	usuario_id int references usuarios(id),
-	mesa_id int references mesas(id),
-	dia_reservacion DATE not null,
-	hora_reservacion TIME not null,
-	estado varchar(20) default 'activa'
+CREATE TABLE mesas (
+	id SERIAL PRIMARY KEY,
+	disponible BOOLEAN NOT NULL DEFAULT TRUE,
+	rest_id INTEGER REFERENCES restaurantes(id) ON DELETE CASCADE,
+	numero_mesa INTEGER,
+	capacidad INTEGER CHECK (capacidad > 0)
 );
 
-create table pedidos (
-	id SERIAL primary key,
-	usuario_id int references usuarios(id),
-	reservacion_id int references reservaciones(id),
-	tipo_pedido varchar(50), 
-	fecha_orden Date not null,
-	estado varchar(50) default 'pendiente'
+CREATE TABLE reservaciones(
+	id SERIAL PRIMARY KEY,
+	usuario_id varchar(255) not null,
+	mesa_id INTEGER REFERENCES mesas(id) ON DELETE CASCADE,
+	dia_reservacion DATE NOT NULL,
+	hora_reservacion TIME NOT NULL,
+	estado VARCHAR(20) DEFAULT 'activa'
 );
 
-create table idem_pedido(
-	id SERIAL primary key,
-	pedido_id int references pedidos(id),
-	plato_id int references platos(id),
-	cantidad int check (cantidad > 0)
+CREATE TABLE pedidos (
+	id SERIAL PRIMARY KEY,
+	usuario_id varchar(255) not null,
+	reservacion_id INTEGER REFERENCES reservaciones(id) ON DELETE SET NULL,
+	tipo_pedido VARCHAR(50), 
+	fecha_orden DATE NOT NULL,
+	estado VARCHAR(50) DEFAULT 'pendiente'
+);
+
+CREATE TABLE item_pedido(
+	id SERIAL PRIMARY KEY,
+	pedido_id INTEGER REFERENCES pedidos(id) ON DELETE CASCADE,
+	plato_id INTEGER REFERENCES platos(id) ON DELETE CASCADE,
+	cantidad INTEGER CHECK (cantidad > 0)
 );

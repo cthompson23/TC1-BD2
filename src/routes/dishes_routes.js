@@ -1,13 +1,20 @@
 const express = require("express");
 const router = express.Router();
-const {create_dish,get_all_dishes,
-        get_dish_by_id, update_dish, delete_dish
-    } = require("../controllers/dishes_controller.js");
 
-router.post("/platos", create_dish);
-router.get("/platos", get_all_dishes);
-router.get("/platos/:id", get_dish_by_id);
-router.put("/platos/:id", update_dish);
-router.delete("/platos/:id", delete_dish);
+const {
+    get_all_dishes,
+    get_dishes_by_menu,
+    get_dish_by_id,
+    create_dish,
+    update_dish,
+    delete_dish
+} = require("../controllers/dishes_controller.js");
+
+router.get("/dishes", get_all_dishes);
+router.get("/dishes/:id", get_dish_by_id);
+router.get("/menus/:menu_id/dishes", get_dishes_by_menu);
+router.post("/dishes", create_dish);
+router.put("/dishes/:id", update_dish);
+router.delete("/dishes/:id", delete_dish);
 
 module.exports = router;

@@ -1,0 +1,31 @@
+{
+  "realm": "restaurant-realm",
+  "enabled": true,
+  "roles": {
+    "realm": [
+      {
+        "name": "admin",
+        "description": "Rol con todos los privilegios"
+      },
+      {
+        "name": "client",
+        "description": "Rol para usuarios finales"
+      }
+    ]
+    },
+
+  "clients": [
+    {
+      "clientId": "restaurant-api",
+      "name": "Restaurant API",
+      "enabled": true,
+
+      "publicClient": true,
+      "directAccessGrantsEnabled": true,
+      "standardFlowEnabled": true,
+
+      "redirectUris": ["*"],
+      "webOrigins": ["*"]
+    }
+  ]
+}
